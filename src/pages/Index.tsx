@@ -3,41 +3,16 @@ import Navbar from "@/components/Navbar";
 import TournamentCard from "@/components/TournamentCard";
 import SearchFilters from "@/components/SearchFilters";
 import { ArrowRight, Trophy, Users, Calendar, Shield } from "lucide-react";
+import { useTournaments } from "@/hooks/useTournaments";
+import { Link } from "react-router-dom";
 
 const Index = () => {
-  // Mock tournament data
-  const featuredTournaments = [
-    {
-      title: "Nairobi Premier League 2024",
-      region: "Nairobi",
-      date: "Dec 15-22, 2024",
-      category: "Open",
-      teamsRegistered: 12,
-      maxTeams: 16,
-      entryFee: "KES 15,000",
-      status: "open" as const,
-    },
-    {
-      title: "Mombasa Youth Championship",
-      region: "Mombasa",
-      date: "Jan 10-17, 2025",
-      category: "Under 18",
-      teamsRegistered: 8,
-      maxTeams: 12,
-      entryFee: "KES 8,000",
-      status: "open" as const,
-    },
-    {
-      title: "Kisumu Regional Cup",
-      region: "Kisumu",
-      date: "Dec 1-8, 2024",
-      category: "Under 21",
-      teamsRegistered: 10,
-      maxTeams: 10,
-      entryFee: "KES 12,000",
-      status: "ongoing" as const,
-    },
-  ];
+  const { data: tournaments } = useTournaments({
+    status: ['registration_open', 'published']
+  });
+
+  // Get first 3 tournaments for featured section
+  const featuredTournaments = tournaments?.slice(0, 3) || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -126,16 +101,26 @@ const Index = () => {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {featuredTournaments.map((tournament, index) => (
-              <TournamentCard key={index} {...tournament} />
+            {featuredTournaments.map((tournament) => (
+              <TournamentCard key={tournament.id} tournament={tournament} />
             ))}
           </div>
 
+          {featuredTournaments.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                No featured tournaments at the moment. Check back soon!
+              </p>
+            </div>
+          )}
+
           <div className="mt-12 text-center">
-            <Button size="lg" variant="outline">
-              View All Tournaments
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <Link to="/tournaments">
+              <Button size="lg" variant="outline">
+                View All Tournaments
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

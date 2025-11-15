@@ -41,6 +41,72 @@ export type Database = {
         }
         Relationships: []
       }
+      tournaments: {
+        Row: {
+          category: Database["public"]["Enums"]["tournament_category"]
+          created_at: string
+          currency: string
+          description: string | null
+          end_date: string
+          entry_fee: number
+          id: string
+          max_players_per_team: number | null
+          max_teams: number
+          min_players_per_team: number | null
+          min_teams: number | null
+          name: string
+          organizer_id: string
+          region: Database["public"]["Enums"]["kenya_region"]
+          registration_deadline: string
+          start_date: string
+          status: Database["public"]["Enums"]["tournament_status"]
+          updated_at: string
+          venue: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["tournament_category"]
+          created_at?: string
+          currency?: string
+          description?: string | null
+          end_date: string
+          entry_fee: number
+          id?: string
+          max_players_per_team?: number | null
+          max_teams: number
+          min_players_per_team?: number | null
+          min_teams?: number | null
+          name: string
+          organizer_id: string
+          region: Database["public"]["Enums"]["kenya_region"]
+          registration_deadline: string
+          start_date: string
+          status?: Database["public"]["Enums"]["tournament_status"]
+          updated_at?: string
+          venue: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["tournament_category"]
+          created_at?: string
+          currency?: string
+          description?: string | null
+          end_date?: string
+          entry_fee?: number
+          id?: string
+          max_players_per_team?: number | null
+          max_teams?: number
+          min_players_per_team?: number | null
+          min_teams?: number | null
+          name?: string
+          organizer_id?: string
+          region?: Database["public"]["Enums"]["kenya_region"]
+          registration_deadline?: string
+          start_date?: string
+          status?: Database["public"]["Enums"]["tournament_status"]
+          updated_at?: string
+          venue?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -84,6 +150,24 @@ export type Database = {
         | "team_member"
         | "sponsor"
         | "public"
+      kenya_region:
+        | "nairobi"
+        | "central"
+        | "coast"
+        | "eastern"
+        | "north_eastern"
+        | "nyanza"
+        | "rift_valley"
+        | "western"
+      tournament_category: "u17" | "u21" | "open" | "veterans" | "womens"
+      tournament_status:
+        | "draft"
+        | "published"
+        | "registration_open"
+        | "registration_closed"
+        | "ongoing"
+        | "completed"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -219,6 +303,26 @@ export const Constants = {
         "team_member",
         "sponsor",
         "public",
+      ],
+      kenya_region: [
+        "nairobi",
+        "central",
+        "coast",
+        "eastern",
+        "north_eastern",
+        "nyanza",
+        "rift_valley",
+        "western",
+      ],
+      tournament_category: ["u17", "u21", "open", "veterans", "womens"],
+      tournament_status: [
+        "draft",
+        "published",
+        "registration_open",
+        "registration_closed",
+        "ongoing",
+        "completed",
+        "cancelled",
       ],
     },
   },
