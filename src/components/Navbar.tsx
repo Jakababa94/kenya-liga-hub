@@ -1,11 +1,19 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Menu, Trophy, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, Trophy, User, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -35,13 +43,27 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" className="hidden md:flex">
-            <User className="mr-2 h-4 w-4" />
-            Sign In
-          </Button>
-          <Button size="sm" className="hidden md:flex">
-            Register Team
-          </Button>
+          {user ? (
+            <>
+              <span className="hidden md:block text-sm text-muted-foreground">
+                {user.email}
+              </span>
+              <Button variant="ghost" size="sm" className="hidden md:flex" onClick={handleSignOut}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" className="hidden md:flex" onClick={() => navigate('/auth')}>
+                <User className="mr-2 h-4 w-4" />
+                Sign In
+              </Button>
+              <Button size="sm" className="hidden md:flex" onClick={() => navigate('/auth')}>
+                Register Team
+              </Button>
+            </>
+          )}
 
           {/* Mobile Navigation */}
           <Sheet open={open} onOpenChange={setOpen}>
@@ -62,11 +84,49 @@ const Navbar = () => {
                     {link.name}
                   </Link>
                 ))}
-                <Button variant="ghost" size="sm" className="justify-start">
-                  <User className="mr-2 h-4 w-4" />
-                  Sign In
-                </Button>
-                <Button size="sm">Register Team</Button>
+                {user ? (
+                  <>
+                    <div className="px-2 py-2 text-sm text-muted-foreground border-t">
+                      {user.email}
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="justify-start"
+                      onClick={() => {
+                        handleSignOut();
+                        setOpen(false);
+                      }}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="justify-start"
+                      onClick={() => {
+                        navigate('/auth');
+                        setOpen(false);
+                      }}
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      Sign In
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={() => {
+                        navigate('/auth');
+                        setOpen(false);
+                      }}
+                    >
+                      Register Team
+                    </Button>
+                  </>
+                )}
               </div>
             </SheetContent>
           </Sheet>
