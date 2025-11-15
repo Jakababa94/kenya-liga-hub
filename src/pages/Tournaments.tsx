@@ -1,71 +1,13 @@
 import Navbar from "@/components/Navbar";
 import TournamentCard from "@/components/TournamentCard";
 import SearchFilters from "@/components/SearchFilters";
+import { useTournaments } from "@/hooks/useTournaments";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Tournaments = () => {
-  // Mock tournament data - expanded list
-  const tournaments = [
-    {
-      title: "Nairobi Premier League 2024",
-      region: "Nairobi",
-      date: "Dec 15-22, 2024",
-      category: "Open",
-      teamsRegistered: 12,
-      maxTeams: 16,
-      entryFee: "KES 15,000",
-      status: "open" as const,
-    },
-    {
-      title: "Mombasa Youth Championship",
-      region: "Mombasa",
-      date: "Jan 10-17, 2025",
-      category: "Under 18",
-      teamsRegistered: 8,
-      maxTeams: 12,
-      entryFee: "KES 8,000",
-      status: "open" as const,
-    },
-    {
-      title: "Kisumu Regional Cup",
-      region: "Kisumu",
-      date: "Dec 1-8, 2024",
-      category: "Under 21",
-      teamsRegistered: 10,
-      maxTeams: 10,
-      entryFee: "KES 12,000",
-      status: "ongoing" as const,
-    },
-    {
-      title: "Nakuru Veterans League",
-      region: "Nakuru",
-      date: "Jan 20-27, 2025",
-      category: "Veterans",
-      teamsRegistered: 6,
-      maxTeams: 8,
-      entryFee: "KES 10,000",
-      status: "upcoming" as const,
-    },
-    {
-      title: "Eldoret Schools Championship",
-      region: "Eldoret",
-      date: "Feb 5-12, 2025",
-      category: "Under 15",
-      teamsRegistered: 14,
-      maxTeams: 16,
-      entryFee: "KES 5,000",
-      status: "open" as const,
-    },
-    {
-      title: "Coast Region Super Cup",
-      region: "Mombasa",
-      date: "Nov 20-27, 2024",
-      category: "Open",
-      teamsRegistered: 16,
-      maxTeams: 16,
-      entryFee: "KES 20,000",
-      status: "closed" as const,
-    },
-  ];
+  const { data: tournaments, isLoading, error } = useTournaments({
+    status: ['published', 'registration_open', 'registration_closed', 'ongoing']
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -84,11 +26,33 @@ const Tournaments = () => {
             <SearchFilters />
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {tournaments.map((tournament, index) => (
-              <TournamentCard key={index} {...tournament} />
-            ))}
-          </div>
+          {isLoading && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Skeleton key={i} className="h-[300px] w-full" />
+              ))}
+            </div>
+          )}
+
+          {error && (
+            <div className="text-center py-12">
+              <p className="text-destructive">Failed to load tournaments. Please try again.</p>
+            </div>
+          )}
+
+          {!isLoading && !error && tournaments && tournaments.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No tournaments available at the moment.</p>
+            </div>
+          )}
+
+          {!isLoading && !error && tournaments && tournaments.length > 0 && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {tournaments.map((tournament) => (
+                <TournamentCard key={tournament.id} tournament={tournament} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
