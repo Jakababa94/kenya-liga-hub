@@ -41,6 +41,96 @@ export type Database = {
         }
         Relationships: []
       }
+      team_members: {
+        Row: {
+          id: string
+          jersey_number: number | null
+          joined_at: string
+          position: string | null
+          role: Database["public"]["Enums"]["team_member_role"]
+          team_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          jersey_number?: number | null
+          joined_at?: string
+          position?: string | null
+          role?: Database["public"]["Enums"]["team_member_role"]
+          team_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          jersey_number?: number | null
+          joined_at?: string
+          position?: string | null
+          role?: Database["public"]["Enums"]["team_member_role"]
+          team_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teams: {
+        Row: {
+          captain_id: string
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          tournament_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          captain_id: string
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          tournament_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          captain_id?: string
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          tournament_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teams_captain_id_fkey"
+            columns: ["captain_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teams_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tournaments: {
         Row: {
           category: Database["public"]["Enums"]["tournament_category"]
@@ -159,6 +249,7 @@ export type Database = {
         | "nyanza"
         | "rift_valley"
         | "western"
+      team_member_role: "captain" | "member"
       tournament_category: "u17" | "u21" | "open" | "veterans" | "womens"
       tournament_status:
         | "draft"
@@ -314,6 +405,7 @@ export const Constants = {
         "rift_valley",
         "western",
       ],
+      team_member_role: ["captain", "member"],
       tournament_category: ["u17", "u21", "open", "veterans", "womens"],
       tournament_status: [
         "draft",
