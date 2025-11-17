@@ -18,6 +18,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Tournaments", href: "/tournaments" },
+    { name: "Teams", href: "/teams" },
     { name: "About", href: "/about" },
   ];
 
