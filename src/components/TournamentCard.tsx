@@ -4,12 +4,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tournament } from "@/hooks/useTournaments";
 import { format } from "date-fns";
+import { TeamRegistrationDialog } from "./TeamRegistrationDialog";
+import { useAuth } from "@/hooks/useAuth";
 
 interface TournamentCardProps {
   tournament: Tournament;
 }
 
 const TournamentCard = ({ tournament }: TournamentCardProps) => {
+  const { user } = useAuth();
+  
   const statusColors = {
     draft: "bg-muted text-muted-foreground",
     published: "bg-accent text-accent-foreground",
@@ -103,13 +107,20 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
         </div>
       </CardContent>
       <CardFooter className="pt-3">
-        <Button 
-          className="w-full" 
-          variant={canRegister ? "default" : "secondary"} 
-          disabled={tournament.status === 'cancelled' || tournament.status === 'completed'}
-        >
-          {canRegister ? "Register Now" : "View Details"}
-        </Button>
+        {canRegister && user ? (
+          <TeamRegistrationDialog 
+            tournamentId={tournament.id}
+            tournamentName={tournament.name}
+          />
+        ) : (
+          <Button 
+            className="w-full" 
+            variant={canRegister ? "default" : "secondary"} 
+            disabled={tournament.status === 'cancelled' || tournament.status === 'completed'}
+          >
+            {canRegister ? "Sign in to Register" : "View Details"}
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

@@ -131,6 +131,61 @@ export type Database = {
           },
         ]
       }
+      tournament_registrations: {
+        Row: {
+          id: string
+          notes: string | null
+          registered_at: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["registration_status"]
+          team_id: string
+          tournament_id: string
+        }
+        Insert: {
+          id?: string
+          notes?: string | null
+          registered_at?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["registration_status"]
+          team_id: string
+          tournament_id: string
+        }
+        Update: {
+          id?: string
+          notes?: string | null
+          registered_at?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["registration_status"]
+          team_id?: string
+          tournament_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_registrations_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tournament_registrations_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tournament_registrations_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tournaments: {
         Row: {
           category: Database["public"]["Enums"]["tournament_category"]
@@ -249,6 +304,7 @@ export type Database = {
         | "nyanza"
         | "rift_valley"
         | "western"
+      registration_status: "pending" | "approved" | "rejected" | "withdrawn"
       team_member_role: "captain" | "member"
       tournament_category: "u17" | "u21" | "open" | "veterans" | "womens"
       tournament_status:
@@ -405,6 +461,7 @@ export const Constants = {
         "rift_valley",
         "western",
       ],
+      registration_status: ["pending", "approved", "rejected", "withdrawn"],
       team_member_role: ["captain", "member"],
       tournament_category: ["u17", "u21", "open", "veterans", "womens"],
       tournament_status: [
