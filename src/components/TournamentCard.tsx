@@ -6,6 +6,7 @@ import { Tournament } from "@/hooks/useTournaments";
 import { format } from "date-fns";
 import { TeamRegistrationDialog } from "./TeamRegistrationDialog";
 import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 interface TournamentCardProps {
   tournament: Tournament;
@@ -106,20 +107,17 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
           Venue: {tournament.venue}
         </div>
       </CardContent>
-      <CardFooter className="pt-3">
-        {canRegister && user ? (
+      <CardFooter className="pt-3 flex gap-2">
+        <Link to={`/tournaments/${tournament.id}`} className="flex-1">
+          <Button className="w-full" variant="outline">
+            View Details
+          </Button>
+        </Link>
+        {canRegister && user && (
           <TeamRegistrationDialog 
             tournamentId={tournament.id}
             tournamentName={tournament.name}
           />
-        ) : (
-          <Button 
-            className="w-full" 
-            variant={canRegister ? "default" : "secondary"} 
-            disabled={tournament.status === 'cancelled' || tournament.status === 'completed'}
-          >
-            {canRegister ? "Sign in to Register" : "View Details"}
-          </Button>
         )}
       </CardFooter>
     </Card>
