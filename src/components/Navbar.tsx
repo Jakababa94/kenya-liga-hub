@@ -1,14 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, Trophy, User, LogOut } from "lucide-react";
+import { Menu, Trophy, User, LogOut, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/hooks/useAuth";
+import { useHasRole } from "@/hooks/useUserRole";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const isOrganizer = useHasRole('organizer');
 
   const handleSignOut = async () => {
     await signOut();
@@ -46,6 +48,17 @@ const Navbar = () => {
         <div className="flex items-center space-x-4">
           {user ? (
             <>
+              {isOrganizer && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="hidden md:flex"
+                  onClick={() => navigate('/organizer')}
+                >
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  Dashboard
+                </Button>
+              )}
               <span className="hidden md:block text-sm text-muted-foreground">
                 {user.email}
               </span>
@@ -87,6 +100,20 @@ const Navbar = () => {
                 ))}
                 {user ? (
                   <>
+                    {isOrganizer && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="justify-start"
+                        onClick={() => {
+                          navigate('/organizer');
+                          setOpen(false);
+                        }}
+                      >
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Button>
+                    )}
                     <div className="px-2 py-2 text-sm text-muted-foreground border-t">
                       {user.email}
                     </div>
