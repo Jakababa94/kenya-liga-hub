@@ -11,6 +11,7 @@ import Teams from "./pages/Teams";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
 import OrganizerDashboard from "./pages/OrganizerDashboard";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/tournaments/:id" element={<TournamentDetail />} />
             <Route path="/teams" element={<Teams />} />
             <Route path="/organizer" element={<OrganizerDashboard />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/about" element={<About />} />
             <Route path="/auth" element={<Auth />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
