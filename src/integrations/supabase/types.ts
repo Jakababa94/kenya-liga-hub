@@ -84,6 +84,62 @@ export type Database = {
           },
         ]
       }
+      payments: {
+        Row: {
+          amount: number
+          checkout_request_id: string | null
+          created_at: string
+          id: string
+          merchant_request_id: string | null
+          mpesa_receipt_number: string | null
+          phone_number: string
+          registration_id: string
+          result_code: string | null
+          result_desc: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          checkout_request_id?: string | null
+          created_at?: string
+          id?: string
+          merchant_request_id?: string | null
+          mpesa_receipt_number?: string | null
+          phone_number: string
+          registration_id: string
+          result_code?: string | null
+          result_desc?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          checkout_request_id?: string | null
+          created_at?: string
+          id?: string
+          merchant_request_id?: string | null
+          mpesa_receipt_number?: string | null
+          phone_number?: string
+          registration_id?: string
+          result_code?: string | null
+          result_desc?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "tournament_registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -443,6 +499,7 @@ export type Database = {
         | "completed"
         | "postponed"
         | "cancelled"
+      payment_status: "pending" | "completed" | "failed" | "cancelled"
       registration_status: "pending" | "approved" | "rejected" | "withdrawn"
       team_member_role: "captain" | "member"
       tournament_category: "u17" | "u21" | "open" | "veterans" | "womens"
@@ -607,6 +664,7 @@ export const Constants = {
         "postponed",
         "cancelled",
       ],
+      payment_status: ["pending", "completed", "failed", "cancelled"],
       registration_status: ["pending", "approved", "rejected", "withdrawn"],
       team_member_role: ["captain", "member"],
       tournament_category: ["u17", "u21", "open", "veterans", "womens"],

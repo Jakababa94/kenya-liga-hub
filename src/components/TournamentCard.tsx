@@ -117,6 +117,7 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
           <TeamRegistrationDialog 
             tournamentId={tournament.id}
             tournamentName={tournament.name}
+            entryFee={tournament.entry_fee}
           />
         )}
       </CardFooter>
