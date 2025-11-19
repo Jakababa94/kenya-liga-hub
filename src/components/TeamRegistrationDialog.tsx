@@ -14,18 +14,23 @@ import { useUserTeams } from '@/hooks/useUserTeams';
 import { useTeamRegistration } from '@/hooks/useTeamRegistration';
 import { Loader2, Users } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { PaymentDialog } from './PaymentDialog';
 
 interface TeamRegistrationDialogProps {
   tournamentId: string;
   tournamentName: string;
+  entryFee: number;
 }
 
 export const TeamRegistrationDialog = ({
   tournamentId,
   tournamentName,
+  entryFee,
 }: TeamRegistrationDialogProps) => {
   const [open, setOpen] = useState(false);
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState<string>('');
+  const [registrationId, setRegistrationId] = useState<string>('');
   const { teams, isLoading: teamsLoading } = useUserTeams();
   const { registerTeam, isLoading: registering } = useTeamRegistration();
 
@@ -33,17 +38,23 @@ export const TeamRegistrationDialog = ({
     if (!selectedTeamId) return;
 
     const result = await registerTeam(selectedTeamId, tournamentId);
-    if (result.success) {
+    if (result.success && result.registration) {
       setOpen(false);
+      setRegistrationId(result.registration.id);
+      // Open payment dialog if entry fee > 0
+      if (entryFee > 0) {
+        setPaymentDialogOpen(true);
+      }
       setSelectedTeamId('');
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default">Register Team</Button>
-      </DialogTrigger>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="default">Register Team</Button>
+        </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Register for {tournamentName}</DialogTitle>
@@ -114,5 +125,14 @@ export const TeamRegistrationDialog = ({
         </div>
       </DialogContent>
     </Dialog>
+
+    <PaymentDialog
+      open={paymentDialogOpen}
+      onOpenChange={setPaymentDialogOpen}
+      registrationId={registrationId}
+      amount={entryFee}
+      tournamentName={tournamentName}
+    />
+    </>
   );
 };

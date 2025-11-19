@@ -99,12 +99,14 @@ export const useTeamRegistration = () => {
       }
 
       // Register team
-      const { error } = await supabase
+      const { data: registration, error } = await supabase
         .from('tournament_registrations')
         .insert({
           tournament_id: tournamentId,
           team_id: teamId,
-        });
+        })
+        .select()
+        .single();
 
       if (error) {
         if (error.code === '23505') {
@@ -123,7 +125,7 @@ export const useTeamRegistration = () => {
         description: 'Your team has been registered for the tournament.',
       });
 
-      return { success: true, errors: [] };
+      return { success: true, registration };
     } catch (error) {
       console.error('Error registering team:', error);
       toast({
