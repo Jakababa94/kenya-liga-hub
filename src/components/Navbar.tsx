@@ -59,9 +59,15 @@ const Navbar = () => {
                   Dashboard
                 </Button>
               )}
-              <span className="hidden md:block text-sm text-muted-foreground">
-                {user.email}
-              </span>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="hidden md:flex"
+                onClick={() => navigate('/profile')}
+              >
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </Button>
               <Button variant="ghost" size="sm" className="hidden md:flex" onClick={handleSignOut}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign Out
@@ -114,6 +120,18 @@ const Navbar = () => {
                         Dashboard
                       </Button>
                     )}
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="justify-start"
+                      onClick={() => {
+                        navigate('/profile');
+                        setOpen(false);
+                      }}
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </Button>
                     <div className="px-2 py-2 text-sm text-muted-foreground border-t">
                       {user.email}
                     </div>
