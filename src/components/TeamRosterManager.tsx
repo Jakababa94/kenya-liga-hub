@@ -82,8 +82,8 @@ export const TeamRosterManager = ({ teamId, onClose }: TeamRosterManagerProps) =
       // Find user by email
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('id')
-        .ilike('full_name', `%${newMemberEmail}%`)
+        .select('id, full_name')
+        .eq('email', newMemberEmail.trim().toLowerCase())
         .single();
 
       if (profileError) {
@@ -205,10 +205,11 @@ export const TeamRosterManager = ({ teamId, onClose }: TeamRosterManagerProps) =
                 </h3>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <Label htmlFor="member-email">Member Name/Email</Label>
+                    <Label htmlFor="member-email">Member Email</Label>
                     <Input
                       id="member-email"
-                      placeholder="Enter member name"
+                      type="email"
+                      placeholder="member@example.com"
                       value={newMemberEmail}
                       onChange={(e) => setNewMemberEmail(e.target.value)}
                     />

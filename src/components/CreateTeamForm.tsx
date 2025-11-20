@@ -48,13 +48,29 @@ export const CreateTeamForm = ({ onSuccess }: CreateTeamFormProps) => {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.from('teams').insert({
-        name: values.name,
-        captain_id: user.id,
-        logo_url: values.logo_url || null,
-      });
+      // Create the team
+      const { data: team, error: teamError } = await supabase
+        .from('teams')
+        .insert({
+          name: values.name,
+          captain_id: user.id,
+          logo_url: values.logo_url || null,
+        })
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (teamError) throw teamError;
+
+      // Automatically add captain as team member
+      const { error: memberError } = await supabase
+        .from('team_members')
+        .insert({
+          team_id: team.id,
+          user_id: user.id,
+          role: 'captain',
+        });
+
+      if (memberError) throw memberError;
 
       toast({
         title: 'Team Created',
