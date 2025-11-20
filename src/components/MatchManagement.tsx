@@ -23,6 +23,7 @@ import { Edit, Trash2, Play, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { MatchStatus } from '@/hooks/useMatches';
+import { CreateMatchDialog } from './CreateMatchDialog';
 
 interface MatchManagementProps {
   tournamentId: string;
@@ -88,6 +89,13 @@ export default function MatchManagement({ tournamentId }: MatchManagementProps) 
 
   return (
     <div className="space-y-4">
+      <div className="flex justify-between items-center mb-4">
+        <p className="text-sm text-muted-foreground">
+          {matches?.length || 0} match(es) scheduled
+        </p>
+        <CreateMatchDialog tournamentId={tournamentId} />
+      </div>
+
       {matches?.map(match => (
         <Card key={match.id}>
           <CardHeader>
