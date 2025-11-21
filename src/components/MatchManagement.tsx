@@ -24,6 +24,8 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import { MatchStatus } from '@/hooks/useMatches';
 import { CreateMatchDialog } from './CreateMatchDialog';
+import PlayerStatisticsDialog from './PlayerStatisticsDialog';
+import PlayerStatisticsView from './PlayerStatisticsView';
 
 interface MatchManagementProps {
   tournamentId: string;
@@ -116,110 +118,114 @@ export default function MatchManagement({ tournamentId }: MatchManagementProps) 
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-3xl font-bold">
-                {match.home_score} - {match.away_score}
-              </div>
-              <div className="flex gap-2">
-                {match.status === 'scheduled' && (
-                  <Button
-                    size="sm"
-                    onClick={() => handleStartMatch(match.id)}
-                    disabled={updateMatch.isPending}
-                  >
-                    <Play className="w-4 h-4 mr-2" />
-                    Start
-                  </Button>
-                )}
-                {match.status === 'live' && (
-                  <Button
-                    size="sm"
-                    onClick={() => handleCompleteMatch(match.id)}
-                    disabled={updateMatch.isPending}
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Complete
-                  </Button>
-                )}
-                <Dialog>
-                  <DialogTrigger asChild>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold">
+                  {match.home_score} - {match.away_score}
+                </div>
+                <div className="flex gap-2">
+                  {match.status === 'scheduled' && (
                     <Button
                       size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setEditingMatch(match.id);
-                        setHomeScore(match.home_score);
-                        setAwayScore(match.away_score);
-                        setMatchStatus(match.status);
-                      }}
+                      onClick={() => handleStartMatch(match.id)}
+                      disabled={updateMatch.isPending}
                     >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit
+                      <Play className="w-4 h-4 mr-2" />
+                      Start
                     </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Update Match</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-sm font-medium mb-2 block">
-                            {match.home_team?.name} Score
-                          </label>
-                          <Input
-                            type="number"
-                            min="0"
-                            value={homeScore}
-                            onChange={(e) => setHomeScore(parseInt(e.target.value) || 0)}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium mb-2 block">
-                            {match.away_team?.name} Score
-                          </label>
-                          <Input
-                            type="number"
-                            min="0"
-                            value={awayScore}
-                            onChange={(e) => setAwayScore(parseInt(e.target.value) || 0)}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Status</label>
-                        <Select value={matchStatus} onValueChange={(value: MatchStatus) => setMatchStatus(value)}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="scheduled">Scheduled</SelectItem>
-                            <SelectItem value="live">Live</SelectItem>
-                            <SelectItem value="completed">Completed</SelectItem>
-                            <SelectItem value="postponed">Postponed</SelectItem>
-                            <SelectItem value="cancelled">Cancelled</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                  )}
+                  {match.status === 'live' && (
+                    <Button
+                      size="sm"
+                      onClick={() => handleCompleteMatch(match.id)}
+                      disabled={updateMatch.isPending}
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Complete
+                    </Button>
+                  )}
+                  <PlayerStatisticsDialog match={match} />
+                  <Dialog>
+                    <DialogTrigger asChild>
                       <Button
-                        className="w-full"
-                        onClick={() => handleUpdateScore(match.id)}
-                        disabled={updateMatch.isPending}
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setEditingMatch(match.id);
+                          setHomeScore(match.home_score);
+                          setAwayScore(match.away_score);
+                          setMatchStatus(match.status);
+                        }}
                       >
-                        Update Match
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit
                       </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => deleteMatch.mutate(match.id)}
-                  disabled={deleteMatch.isPending}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Update Match</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">
+                              {match.home_team?.name} Score
+                            </label>
+                            <Input
+                              type="number"
+                              min="0"
+                              value={homeScore}
+                              onChange={(e) => setHomeScore(parseInt(e.target.value) || 0)}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">
+                              {match.away_team?.name} Score
+                            </label>
+                            <Input
+                              type="number"
+                              min="0"
+                              value={awayScore}
+                              onChange={(e) => setAwayScore(parseInt(e.target.value) || 0)}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">Status</label>
+                          <Select value={matchStatus} onValueChange={(value: MatchStatus) => setMatchStatus(value)}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="scheduled">Scheduled</SelectItem>
+                              <SelectItem value="live">Live</SelectItem>
+                              <SelectItem value="completed">Completed</SelectItem>
+                              <SelectItem value="postponed">Postponed</SelectItem>
+                              <SelectItem value="cancelled">Cancelled</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Button
+                          className="w-full"
+                          onClick={() => handleUpdateScore(match.id)}
+                          disabled={updateMatch.isPending}
+                        >
+                          Update Match
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => deleteMatch.mutate(match.id)}
+                    disabled={deleteMatch.isPending}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
+              <PlayerStatisticsView matchId={match.id} />
             </div>
           </CardContent>
         </Card>
