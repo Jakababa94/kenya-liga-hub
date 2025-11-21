@@ -140,6 +140,85 @@ export type Database = {
           },
         ]
       }
+      player_statistics: {
+        Row: {
+          assists: number | null
+          created_at: string | null
+          fouls_committed: number | null
+          fouls_suffered: number | null
+          goals: number | null
+          id: string
+          match_id: string
+          minutes_played: number | null
+          player_id: string
+          red_cards: number | null
+          saves: number | null
+          shots_off_target: number | null
+          shots_on_target: number | null
+          team_id: string
+          updated_at: string | null
+          yellow_cards: number | null
+        }
+        Insert: {
+          assists?: number | null
+          created_at?: string | null
+          fouls_committed?: number | null
+          fouls_suffered?: number | null
+          goals?: number | null
+          id?: string
+          match_id: string
+          minutes_played?: number | null
+          player_id: string
+          red_cards?: number | null
+          saves?: number | null
+          shots_off_target?: number | null
+          shots_on_target?: number | null
+          team_id: string
+          updated_at?: string | null
+          yellow_cards?: number | null
+        }
+        Update: {
+          assists?: number | null
+          created_at?: string | null
+          fouls_committed?: number | null
+          fouls_suffered?: number | null
+          goals?: number | null
+          id?: string
+          match_id?: string
+          minutes_played?: number | null
+          player_id?: string
+          red_cards?: number | null
+          saves?: number | null
+          shots_off_target?: number | null
+          shots_on_target?: number | null
+          team_id?: string
+          updated_at?: string | null
+          yellow_cards?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_statistics_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_statistics_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_statistics_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
